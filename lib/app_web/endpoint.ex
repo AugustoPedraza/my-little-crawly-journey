@@ -7,7 +7,7 @@ defmodule CrawlyQuestWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_app_key",
-    signing_salt: "EP+MPhDf",
+    signing_salt: "vbx8hWQ7",
     same_site: "Lax"
   ]
 

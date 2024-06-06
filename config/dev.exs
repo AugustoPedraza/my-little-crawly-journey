@@ -24,7 +24,7 @@ config :app, CrawlyQuestWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "nOc3sw3rkevD2AOI6D5dGN5j66LqmtrjcdOQEL7wt2+OdJt0ZuJSpdCQcns9JY66",
+  secret_key_base: "XH2p9YeZX+gBvbyNcf3585XtEUM8vI+W29kC6QmNq9qZ7W0W+bwLfa4YzQskfvVh",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:app, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:app, ~w(--watch)]}

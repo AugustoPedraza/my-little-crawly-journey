@@ -21,7 +21,7 @@ config :app, CrawlyQuestWeb.Endpoint,
     layout: false
   ],
   pubsub_server: CrawlyQuest.PubSub,
-  live_view: [signing_salt: "Z/9LRjHq"]
+  live_view: [signing_salt: "OkDSgQDo"]
 
 # Configures the mailer
 #

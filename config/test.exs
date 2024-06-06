@@ -20,8 +20,8 @@ config :app, CrawlyQuest.Repo,
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :app, CrawlyQuestWeb.Endpoint,
-  http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "Mr8GLwQUpsBLL1ZV/vTobd9UPiE70IOdBdspzqV4CCASjVHDdIDkLjsRyuYwoRJN",
+  http: [ip: {127, 0, 0, 1}, port: 4004],
+  secret_key_base: "pdd04JECi0uxgWrF62S129Bn21K/7i7g7u5oPbA/1R8KdJHx4oEWDOAyFXjnXWo4",
   server: false
 
 # In test we don't send emails.
