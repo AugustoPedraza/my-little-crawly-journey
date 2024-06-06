@@ -1,27 +1,36 @@
-FROM elixir:latest
+# ./Dockerfile
+# Elixir base image to start with
+FROM elixir:1.17-alpine
 
-# Install debian packages
-RUN apt-get update && \
-    apt-get install --yes build-essential inotify-tools postgresql-client git && \
-    apt-get clean
+ARG PHX_VERSION="1.7.12"
+ARG MIX_ENV="dev"
 
-ADD . /app
+# Default to UTF-8 file.encoding
+ENV LANG C.UTF-8
+ENV SHELL=/bin/bash
+ENV MIX_ENV=${MIX_ENV}
 
-# Install Phoenix packages
-RUN mix local.hex --force && \
-    mix local.rebar --force && \
-    mix archive.install --force hex phx_new
+RUN apk add --update build-base bash git postgresql-client curl inotify-tools
 
-# Make the entrypoint.sh script executable
-RUN chmod +x app/entrypoint.sh
+RUN git config --global --add safe.directory '*'
 
+# install hex package manager
+RUN mix local.hex --force && mix local.rebar --force
 
-WORKDIR /app
+# install our phoenix version
+RUN mix archive.install hex phx_new $PHX_VERSION --force
 
-RUN mix deps.get
+# install C compiler
+# RUN apk add --update alpine-sdk
+RUN apk add --no-cache make gcc libc-dev
 
-# Expose the port that the Phoenix app runs on
-EXPOSE 4000
+# Create and change current directory.
 
-# Specify the entrypoint script
-ENTRYPOINT ["./entrypoint.sh"]
+ADD . /usr/src/app
+WORKDIR /usr/src/app
+
+# Install dependencies.
+# COPY mix.exs mix.lock config/ ./
+# Bundle app source.
+RUN MIX_ENV=$MIX_ENV mix do deps.get, deps.compile
+RUN mix deps.compile --force bcrypt_elixir

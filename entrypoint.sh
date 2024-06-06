@@ -11,4 +11,6 @@ if [[ -z `psql -Atqc "\\list $PGDATABASE"` ]]; then
   echo "Database $PGDATABASE created."
 fi
 
-exec mix phx.server
+echo "\n Launching Phoenix web server..."
+# Start the phoenix web server
+iex -S mix phx.server
