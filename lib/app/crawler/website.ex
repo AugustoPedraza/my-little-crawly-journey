@@ -3,6 +3,7 @@ defmodule CrawlyQuest.Crawler.Website do
   import Ecto.Changeset
 
   alias CrawlyQuest.Accounts.User
+  alias CrawlyQuest.Crawler.Link
 
   @status ["pending", "in_progress", "completed", "failed"]
 
@@ -11,6 +12,8 @@ defmodule CrawlyQuest.Crawler.Website do
     field :url, :string
     field :total_links, :integer
     field :status, :string
+
+    has_many :links, Link
 
     belongs_to :user, User
 

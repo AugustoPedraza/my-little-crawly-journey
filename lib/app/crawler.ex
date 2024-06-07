@@ -40,6 +40,15 @@ defmodule CrawlyQuest.Crawler do
   """
   def get_website!(id), do: Repo.get!(Website, id)
 
+
+  def get_website_with_links!(user_id, id) do
+    query = from w in Website,
+      where: w.user_id == ^user_id and w.id == ^id,
+      preload: [:links]
+
+    Repo.one!(query)
+  end
+
   @doc """
   Creates a website.
 
@@ -84,7 +93,7 @@ defmodule CrawlyQuest.Crawler do
       {:ok, %{updated_website: updated_website}} ->
         {:ok, updated_website}
 
-      {:error, failed_op, failed_value, _changes_so_far} ->
+      {:error, failed_op, _failed_value, _changes_so_far} ->
         mark_failed_website(website, "Failed links scrapping saving(code:#{failed_op})")
       end
   end

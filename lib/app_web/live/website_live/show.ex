@@ -10,12 +10,13 @@ defmodule CrawlyQuestWeb.WebsiteLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    website = Crawler.get_website_with_links!(socket.assigns.current_user.id, id)
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:website, Crawler.get_website!(id))}
+     |> assign(:website, website)}
   end
 
-  defp page_title(:show), do: "Show Website"
-  defp page_title(:edit), do: "Edit Website"
+  defp page_title(:show), do: "Website Details"
 end
