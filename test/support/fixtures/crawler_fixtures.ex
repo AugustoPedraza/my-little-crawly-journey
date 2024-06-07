@@ -4,10 +4,13 @@ defmodule CrawlyQuest.CrawlerFixtures do
   entities via the `CrawlyQuest.Crawler` context.
   """
 
+  import CrawlyQuest.AccountsFixtures
+
   def valid_website_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       name: "Some Website",
       url: "http://some.url",
+      user: user_fixture()
     })
   end
 

@@ -13,6 +13,11 @@ defmodule CrawlyQuestWeb.WebsiteLiveTest do
     %{website: website}
   end
 
+  defp create_website_for_current_user(%{user: user}) do
+    website = website_fixture(user: user)
+    %{website_current_user: website}
+  end
+
   describe "Index page on not logged in" do
     setup [:create_website]
 
@@ -27,13 +32,18 @@ defmodule CrawlyQuestWeb.WebsiteLiveTest do
   end
 
   describe "Index page on logged in" do
-    setup [:create_website, :register_and_log_in_user]
+    setup [
+      :create_website,
+      :register_and_log_in_user,
+      :create_website_for_current_user
+    ]
 
-    test "lists all crawler_websites", %{conn: conn, website: website} do
+    test "lists all crawler_websites of current user", %{conn: conn, website: another_website, website_current_user: website} do
       {:ok, _index_live, html} = live(conn, ~p"/crawler_websites")
 
       assert html =~ "Listing Crawler websites"
       assert html =~ website.name
+      refute html =~ another_website.name
     end
 
     # test "saves new website", %{conn: conn} do
