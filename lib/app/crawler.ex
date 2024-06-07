@@ -17,8 +17,10 @@ defmodule CrawlyQuest.Crawler do
       [%Website{}, ...]
 
   """
-  def list_crawler_websites do
-    Repo.all(Website)
+  def list_crawler_websites(%{user_id: user_id}) do
+    query = from w in Website, where: w.user_id == ^user_id
+
+    Repo.all(query)
   end
 
   @doc """

@@ -2,9 +2,13 @@ defmodule CrawlyQuest.Crawler.Website do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias CrawlyQuest.Accounts.User
+
   schema "crawler_websites" do
     field :name, :string
     field :url, :string
+
+    belongs_to :user, User
 
     timestamps(type: :utc_datetime)
   end
@@ -12,7 +16,7 @@ defmodule CrawlyQuest.Crawler.Website do
   @doc false
   def changeset(website, attrs) do
     website
-    |> cast(attrs, [:name, :url])
+    |> cast(attrs, [:name, :url, :user_id])
     |> validate_required([:name])
     |> validate_url()
   end

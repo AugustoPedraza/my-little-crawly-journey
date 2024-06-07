@@ -14,7 +14,7 @@ defmodule CrawlyQuestWeb.WebsiteLiveTest do
   end
 
   defp create_website_for_current_user(%{user: user}) do
-    website = website_fixture(user: user)
+    website = website_fixture(user_id: user.id, name: "website for current user", url: "https://logged.in")
     %{website_current_user: website}
   end
 
