@@ -1,0 +1,42 @@
+<.header>
+  Listing Crawler websites
+  <:actions>
+    <.link patch={~p"/crawler_websites/new"}>
+      <.button>New Website</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="crawler_websites"
+  rows={@streams.crawler_websites}
+  row_click={fn {_id, website} -> JS.navigate(~p"/crawler_websites/#{website}") end}
+>
+  <:col :let={{_id, website}} label="Name"><%= website.name %></:col>
+  <:col :let={{_id, website}} label="Url"><%= website.url %></:col>
+  <:action :let={{_id, website}}>
+    <div class="sr-only">
+      <.link navigate={~p"/crawler_websites/#{website}"}>Show</.link>
+    </div>
+    <.link patch={~p"/crawler_websites/#{website}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, website}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: website.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="website-modal" show on_cancel={JS.patch(~p"/crawler_websites")}>
+  <.live_component
+    module={CrawlyQuestWeb.WebsiteLive.FormComponent}
+    id={@website.id || :new}
+    title={@page_title}
+    action={@live_action}
+    website={@website}
+    patch={~p"/crawler_websites"}
+  />
+</.modal>

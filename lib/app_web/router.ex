@@ -68,6 +68,13 @@ defmodule CrawlyQuestWeb.Router do
       on_mount: [{CrawlyQuestWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      live "/crawler_websites", WebsiteLive.Index, :index
+      live "/crawler_websites/new", WebsiteLive.Index, :new
+      live "/crawler_websites/:id/edit", WebsiteLive.Index, :edit
+
+      live "/crawler_websites/:id", WebsiteLive.Show, :show
+      live "/crawler_websites/:id/show/edit", WebsiteLive.Show, :edit
     end
   end
 
