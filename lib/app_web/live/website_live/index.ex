@@ -37,9 +37,21 @@ defmodule CrawlyQuestWeb.WebsiteLive.Index do
     {:noreply, stream_insert(socket, :crawler_websites, website)}
   end
 
-  def handle_info({ref, website} = _task_info, socket) do
+  def handle_info({ref, {:ok, updated_website}} = _task_info, socket) do
     Process.demonitor(ref, [:flush])
 
-    {:noreply, stream_insert(socket, :crawler_websites, website)}
+    {:noreply,
+      socket
+      |> put_flash(:info, "Scrapping completed for: \"#{updated_website.name}\"")
+      |> stream_insert(:crawler_websites, updated_website)}
+  end
+
+  def handle_info({ref, {:error, updated_website, reason}} = _task_info, socket) do
+    Process.demonitor(ref, [:flush])
+
+    {:noreply,
+      socket
+      |> put_flash(:error, "Scrapping failed(#{reason}) for: \"#{updated_website.name}\"")
+      |> stream_insert(:crawler_websites, updated_website)}
   end
 end

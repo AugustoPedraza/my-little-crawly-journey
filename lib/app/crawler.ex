@@ -5,6 +5,7 @@ defmodule CrawlyQuest.Crawler do
 
   import Ecto.Query, warn: false
   alias CrawlyQuest.Repo
+  alias Ecto.Multi
 
   alias CrawlyQuest.Crawler.{Link, Website}
 
@@ -71,12 +72,66 @@ defmodule CrawlyQuest.Crawler do
   end
 
   def scrap_links(%Website{} = website) do
-     Enum.each(1..5, fn n ->
-       Process.sleep(1_000)
-       IO.puts("SENDING ASYNC TASK MESSAGE #{n}")
-     end)
+    case extract_links(website.url) do
+      {:ok, found_links}        -> process_found_links(found_links, website)
+      {:error, :page_not_found} -> mark_failed_website(website, "page not found")
+      {:error, _}               -> mark_failed_website(website, "unknown error parsing url")
+    end
+  end
 
-     %{website | total_links: 10, status: :completed}
+  defp process_found_links(found_links, website) do
+    case save_website_and_links_trx(found_links, website) do
+      {:ok, %{updated_website: updated_website}} ->
+        {:ok, updated_website}
+
+      {:error, failed_op, failed_value, _changes_so_far} ->
+        mark_failed_website(website, "Failed links scrapping saving(code:#{failed_op})")
+      end
+  end
+
+  defp mark_failed_website(website, reason) do
+    updated_website = website
+                      |> Website.mark_as_done_changeset(%{status: "failed", total_links: 0})
+                      |> Repo.update!()
+
+    {:error, updated_website, reason}
+  end
+
+  defp save_website_and_links_trx(found_links, website) do
+    found_links
+    |> Enum.with_index()
+    |> Enum.reduce(Multi.new(), fn {{url, content}, index}, multi ->
+      if url && String.trim(content || "") != "" do
+        attrs = %{url: url, content: content, website_id: website.id}
+        changeset = Link.changeset(%Link{}, attrs)
+
+        step_name = "insert_link_#{index}"
+        Multi.insert(multi, step_name, changeset)
+      else
+        # skip url with nil
+        multi
+      end
+    end)
+    |> Multi.update(:updated_website, Website.mark_as_done_changeset(website, %{total_links: length(found_links), status: "completed"}))
+    |> Repo.transaction()
+  end
+
+  defp extract_links(url) do
+    case HTTPoison.get(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        links = body
+                |> Floki.find("a")
+                |> Enum.map(fn element ->
+                  href = Floki.attribute(element, "href") |> List.first()
+                  {href, Floki.text(element)}
+                end)
+
+        {:ok, links}
+      {:ok, %HTTPoison.Response{status_code: 404}} ->
+        {:error, :page_not_found}
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, reason}
+    end
   end
 
   @doc """

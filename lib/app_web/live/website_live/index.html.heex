@@ -15,9 +15,7 @@
   <:col :let={{_id, website}} label="Name"><%= website.name %></:col>
   <:col :let={{_id, website}} label="Url"><%= website.url %></:col>
   <:col :let={{_id, website}} label="Total Links">
-    <%= if website.status == :failed || website.status == :completed do %>
-      <%= website.total_links%>
-    <% else %>
+    <%= if website.status == "pending" || website.status == "in_progress" do %>
       <svg
         class="animate-spin h-10 w-10 text-blue-500"
         xmlns="http://www.w3.org/2000/svg"
@@ -33,6 +31,8 @@
         >
         </path>
       </svg>
+    <% else %>
+      <%= website.total_links%>
     <% end %>
   </:col>
   <%# <:action :let={{_id, website}}> %>

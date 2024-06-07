@@ -27,6 +27,13 @@ defmodule CrawlyQuest.Crawler.Website do
     |> validate_url()
   end
 
+  def mark_as_done_changeset(website, attrs) do
+    website
+    |> cast(attrs, [:total_links, :status])
+    |> validate_required([:total_links])
+    |> validate_inclusion(:status, @status)
+  end
+
   defp validate_url(changeset) do
     changeset
     |> validate_required([:url])

@@ -16,7 +16,7 @@ defmodule CrawlyQuest.Crawler.Link do
   @doc false
   def changeset(link, attrs) do
     link
-    |> cast(attrs, [:url, :content])
-    |> validate_required([:url, :content])
+    |> cast(attrs, [:url, :content, :website_id])
+    |> validate_required([:url, :content, :website_id])
   end
 end
