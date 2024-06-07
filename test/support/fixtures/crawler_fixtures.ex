@@ -4,16 +4,20 @@ defmodule CrawlyQuest.CrawlerFixtures do
   entities via the `CrawlyQuest.Crawler` context.
   """
 
+  def valid_website_attributes(attrs \\ %{}) do
+    Enum.into(attrs, %{
+      name: "Some Website",
+      url: "http://some.url",
+    })
+  end
+
   @doc """
   Generate a website.
   """
   def website_fixture(attrs \\ %{}) do
     {:ok, website} =
       attrs
-      |> Enum.into(%{
-        name: "some name",
-        url: "some url"
-      })
+      |> valid_website_attributes()
       |> CrawlyQuest.Crawler.create_website()
 
     website

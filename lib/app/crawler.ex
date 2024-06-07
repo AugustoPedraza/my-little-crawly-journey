@@ -56,40 +56,6 @@ defmodule CrawlyQuest.Crawler do
   end
 
   @doc """
-  Updates a website.
-
-  ## Examples
-
-      iex> update_website(website, %{field: new_value})
-      {:ok, %Website{}}
-
-      iex> update_website(website, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_website(%Website{} = website, attrs) do
-    website
-    |> Website.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a website.
-
-  ## Examples
-
-      iex> delete_website(website)
-      {:ok, %Website{}}
-
-      iex> delete_website(website)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_website(%Website{} = website) do
-    Repo.delete(website)
-  end
-
-  @doc """
   Returns an `%Ecto.Changeset{}` for tracking website changes.
 
   ## Examples

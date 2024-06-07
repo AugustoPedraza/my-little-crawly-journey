@@ -14,12 +14,6 @@ defmodule CrawlyQuestWeb.WebsiteLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    socket
-    |> assign(:page_title, "Edit Website")
-    |> assign(:website, Crawler.get_website!(id))
-  end
-
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Website")
@@ -35,13 +29,5 @@ defmodule CrawlyQuestWeb.WebsiteLive.Index do
   @impl true
   def handle_info({CrawlyQuestWeb.WebsiteLive.FormComponent, {:saved, website}}, socket) do
     {:noreply, stream_insert(socket, :crawler_websites, website)}
-  end
-
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    website = Crawler.get_website!(id)
-    {:ok, _} = Crawler.delete_website(website)
-
-    {:noreply, stream_delete(socket, :crawler_websites, website)}
   end
 end

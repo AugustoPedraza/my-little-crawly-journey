@@ -53,21 +53,6 @@ defmodule CrawlyQuestWeb.WebsiteLive.FormComponent do
     save_website(socket, socket.assigns.action, website_params)
   end
 
-  defp save_website(socket, :edit, website_params) do
-    case Crawler.update_website(socket.assigns.website, website_params) do
-      {:ok, website} ->
-        notify_parent({:saved, website})
-
-        {:noreply,
-         socket
-         |> put_flash(:info, "Website updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
-  end
-
   defp save_website(socket, :new, website_params) do
     case Crawler.create_website(website_params) do
       {:ok, website} ->

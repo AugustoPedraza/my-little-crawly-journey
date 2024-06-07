@@ -13,6 +13,14 @@ defmodule CrawlyQuest.Crawler.Website do
   def changeset(website, attrs) do
     website
     |> cast(attrs, [:name, :url])
-    |> validate_required([:name, :url])
+    |> validate_required([:name])
+    |> validate_url()
+  end
+
+  defp validate_url(changeset) do
+    changeset
+    |> validate_required([:url])
+    |> validate_format(:url, ~r/^https?:\/\/[\S]+/, message: "must to start with http:// or https:// and no spaces")
+    |> validate_length(:url, max: 160)
   end
 end
