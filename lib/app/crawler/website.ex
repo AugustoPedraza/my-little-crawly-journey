@@ -4,9 +4,13 @@ defmodule CrawlyQuest.Crawler.Website do
 
   alias CrawlyQuest.Accounts.User
 
+  @status [:pending, :in_progress, :completed, :failed]
+
   schema "crawler_websites" do
     field :name, :string
     field :url, :string
+    field :total_links, :integer
+    field :status, :string
 
     belongs_to :user, User
 
@@ -18,6 +22,8 @@ defmodule CrawlyQuest.Crawler.Website do
     website
     |> cast(attrs, [:name, :url, :user_id])
     |> validate_required([:name])
+    |> put_change(:status, :pending)
+    |> validate_subset(:status, @status)
     |> validate_url()
   end
 
