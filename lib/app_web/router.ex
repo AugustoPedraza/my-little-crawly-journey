@@ -71,10 +71,8 @@ defmodule CrawlyQuestWeb.Router do
 
       live "/crawler_websites", WebsiteLive.Index, :index
       live "/crawler_websites/new", WebsiteLive.Index, :new
-      live "/crawler_websites/:id/edit", WebsiteLive.Index, :edit
 
       live "/crawler_websites/:id", WebsiteLive.Show, :show
-      live "/crawler_websites/:id/show/edit", WebsiteLive.Show, :edit
     end
   end
 

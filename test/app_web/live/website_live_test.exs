@@ -46,61 +46,39 @@ defmodule CrawlyQuestWeb.WebsiteLiveTest do
       refute html =~ another_website.name
     end
 
-    # test "saves new website", %{conn: conn} do
-    #   {:ok, index_live, _html} = live(conn, ~p"/crawler_websites")
+    test "renders create button", %{conn: conn} do
+      {:ok, _index_live, html} = live(conn, ~p"/crawler_websites")
 
-    #   assert index_live |> element("a", "New Website") |> render_click() =~
-    #            "New Website"
-
-    #   assert_patch(index_live, ~p"/crawler_websites/new")
-
-    #   assert index_live
-    #          |> form("#website-form", website: @invalid_attrs)
-    #          |> render_change() =~ "can&#39;t be blank"
-
-    #   assert index_live
-    #          |> form("#website-form", website: @create_attrs)
-    #          |> render_submit()
-
-    #   assert_patch(index_live, ~p"/crawler_websites")
-
-    #   html = render(index_live)
-    #   assert html =~ "Website created successfully"
-    #   assert html =~ "some name"
-    # end
+      assert html =~ "New Website"
+    end
   end
 
-  # describe "Show" do
-  #   setup [:create_website, :register_and_log_in_user]
+  describe "Create form" do
+    setup [:register_and_log_in_user]
 
-  #   test "displays website", %{conn: conn, website: website} do
-  #     {:ok, _show_live, html} = live(conn, ~p"/crawler_websites/#{website}")
+    setup do
+      %{url: "https://google.wow"}
+    end
 
-  #     assert html =~ "Show Website"
-  #     assert html =~ website.name
-  #   end
+    test "saves new website", %{conn: conn, url: url} do
+      {:ok, index_live, _html} = live(conn, ~p"/crawler_websites")
 
-  #   test "updates website within modal", %{conn: conn, website: website} do
-  #     {:ok, show_live, _html} = live(conn, ~p"/crawler_websites/#{website}")
+      assert index_live |> element("a", "New Website") |> render_click() =~
+               "New Website"
 
-  #     assert show_live |> element("a", "Edit") |> render_click() =~
-  #              "Edit Website"
+      assert_patch(index_live, ~p"/crawler_websites/new")
 
-  #     assert_patch(show_live, ~p"/crawler_websites/#{website}/show/edit")
+      index_live
+      |> form("#website-form", %{
+        "website" => %{"name" => "Cool Website", "url" => url}
+      })
+      |> render_submit()
 
-  #     assert show_live
-  #            |> form("#website-form", website: @invalid_attrs)
-  #            |> render_change() =~ "can&#39;t be blank"
+      assert_patch(index_live, ~p"/crawler_websites")
 
-  #     assert show_live
-  #            |> form("#website-form", website: @update_attrs)
-  #            |> render_submit()
-
-  #     assert_patch(show_live, ~p"/crawler_websites/#{website}")
-
-  #     html = render(show_live)
-  #     assert html =~ "Website updated successfully"
-  #     assert html =~ "some updated name"
-  #   end
-  # end
+      html = render(index_live)
+      assert html =~ "Website created successfully"
+      assert html =~ "https://google.wow"
+    end
+  end
 end

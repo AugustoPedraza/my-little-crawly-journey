@@ -6,11 +6,13 @@ defmodule CrawlyQuest.CrawlerFixtures do
 
   import CrawlyQuest.AccountsFixtures
 
+  def valid_website_url, do: "http://some.url"
+
   def valid_website_attributes(attrs \\ %{}) do
     attrs
     |> Enum.into(%{
       name: "Some Website",
-      url: "http://some.url",
+      url: valid_website_url(),
     })
     |> add_user()
   end

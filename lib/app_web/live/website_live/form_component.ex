@@ -29,6 +29,16 @@ defmodule CrawlyQuestWeb.WebsiteLive.FormComponent do
     """
   end
 
+  # def mount(_params, _session,  socket) do
+  # # def mount(_params, _session, %{assigns: %{current_user: current_user}} = socket) do
+  #   IO.puts("???????????????????????????")
+  #   # current_user |> IO.inspect(label: "current_user")
+  #   socket.assigns |> IO.inspect(label: "socket.assigns")
+  #   IO.puts("???????????????????????????")
+
+  #   {:ok, socket}
+  # end
+
   @impl true
   def update(%{website: website} = assigns, socket) do
     changeset = Crawler.change_website(website)
@@ -43,6 +53,7 @@ defmodule CrawlyQuestWeb.WebsiteLive.FormComponent do
   def handle_event("validate", %{"website" => website_params}, socket) do
     changeset =
       socket.assigns.website
+      |> Map.put("user_id", socket.assigns.current_user.id)
       |> Crawler.change_website(website_params)
       |> Map.put(:action, :validate)
 
@@ -53,7 +64,9 @@ defmodule CrawlyQuestWeb.WebsiteLive.FormComponent do
     save_website(socket, socket.assigns.action, website_params)
   end
 
-  defp save_website(socket, :new, website_params) do
+  defp save_website(socket, :new, params) do
+    website_params = Map.put(params, "user_id", socket.assigns.current_user.id)
+
     case Crawler.create_website(website_params) do
       {:ok, website} ->
         notify_parent({:saved, website})

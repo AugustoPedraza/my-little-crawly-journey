@@ -7,6 +7,7 @@ defmodule CrawlyQuestWeb.WebsiteLive.Index do
   @impl true
   def mount(_params, _session, %{assigns: %{current_user: current_user}} = socket) do
     websites = Crawler.list_crawler_websites(%{user_id: current_user.id})
+
     {:ok, stream(socket, :crawler_websites, websites)}
   end
 
