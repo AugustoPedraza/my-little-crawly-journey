@@ -30,6 +30,16 @@ defmodule CrawlyQuestWeb.WebsiteLive.Index do
 
   @impl true
   def handle_info({CrawlyQuestWeb.WebsiteLive.FormComponent, {:saved, website}}, socket) do
+    Task.async(fn ->
+      Crawler.scrap_links(website)
+    end)
+
+    {:noreply, stream_insert(socket, :crawler_websites, website)}
+  end
+
+  def handle_info({ref, website} = task_info, socket) do
+    Process.demonitor(ref, [:flush])
+
     {:noreply, stream_insert(socket, :crawler_websites, website)}
   end
 end

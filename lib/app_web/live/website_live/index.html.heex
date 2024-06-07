@@ -17,7 +17,6 @@
   <:col :let={{_id, website}} label="Total Links">
     <%= if website.status == :failed || website.status == :completed do %>
       <%= website.total_links%>
-      <h1>amam</h1>
     <% else %>
       <svg
         class="animate-spin h-10 w-10 text-blue-500"

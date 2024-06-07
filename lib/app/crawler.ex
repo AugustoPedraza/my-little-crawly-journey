@@ -69,4 +69,13 @@ defmodule CrawlyQuest.Crawler do
   def change_website(%Website{} = website, attrs \\ %{}) do
     Website.changeset(website, attrs)
   end
+
+  def scrap_links(%Website{} = website) do
+     Enum.each(1..5, fn n ->
+       Process.sleep(1_000)
+       IO.puts("SENDING ASYNC TASK MESSAGE #{n}")
+     end)
+
+     %{website | total_links: 10, status: :completed}
+  end
 end
