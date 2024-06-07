@@ -37,7 +37,7 @@ defmodule CrawlyQuestWeb.WebsiteLive.Index do
     {:noreply, stream_insert(socket, :crawler_websites, website)}
   end
 
-  def handle_info({ref, website} = task_info, socket) do
+  def handle_info({ref, website} = _task_info, socket) do
     Process.demonitor(ref, [:flush])
 
     {:noreply, stream_insert(socket, :crawler_websites, website)}

@@ -6,7 +6,7 @@ defmodule CrawlyQuest.Crawler do
   import Ecto.Query, warn: false
   alias CrawlyQuest.Repo
 
-  alias CrawlyQuest.Crawler.Website
+  alias CrawlyQuest.Crawler.{Link, Website}
 
   @doc """
   Returns the list of crawler_websites.
@@ -77,5 +77,36 @@ defmodule CrawlyQuest.Crawler do
      end)
 
      %{website | total_links: 10, status: :completed}
+  end
+
+  @doc """
+  Returns the list of crawler_links.
+
+  ## Examples
+
+      iex> list_crawler_links()
+      [%Link{}, ...]
+
+  """
+  def list_crawler_links do
+    Repo.all(Link)
+  end
+
+  @doc """
+  Creates a link.
+
+  ## Examples
+
+      iex> create_link(%{field: value})
+      {:ok, %Link{}}
+
+      iex> create_link(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_link(attrs \\ %{}) do
+    %Link{}
+    |> Link.changeset(attrs)
+    |> Repo.insert()
   end
 end
